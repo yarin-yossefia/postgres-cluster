@@ -1,0 +1,14 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "ha_proxy",
+            "Group": "Servers",
+            "Host": "haproxy",
+            "Port": 5000,
+            "MaintenanceDB": "postgres",
+            "Username": "admin",
+	    "PassFile": "/pgadmin4/pgpass",
+	    "SSLMode": "prefer"
+        }
+    }
+}

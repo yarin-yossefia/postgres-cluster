@@ -1,5 +1,3 @@
-# docker compose file for running a 3-node PostgreSQL cluster
-# with 3-node etcd cluster as the DCS and one haproxy node
 version: "2"
 
 networks:
@@ -14,34 +12,11 @@ services:
         command: etcd
         environment: &etcd_env
             ETCD_NAME: etcd1
-            ETCD_INITIAL_ADVERTISE_PEER_URLS: http://etcd1:2380
-            ETCD_INITIAL_CLUSTER: etcd1=http://etcd1:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380
-            ETCD_INITIAL_CLUSTER_STATE: new
-            ETCD_INITIAL_CLUSTER_TOKEN: tutorial
             ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
             ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
 
-    etcd2:
-        image: patronitraining/patroni
-        networks: [ demo ]
-        container_name: demo-etcd2
-        hostname: etcd2
-        command: etcd
-        environment:
-            <<: *etcd_env
-            ETCD_NAME: etcd2
-            ETCD_INITIAL_ADVERTISE_PEER_URLS: http://etcd2:2380
 
-    etcd3:
-        image: patronitraining/patroni
-        networks: [ demo ]
-        container_name: demo-etcd3
-        hostname: etcd3
-        command: etcd
-        environment:
-            <<: *etcd_env
-            ETCD_NAME: etcd3
-            ETCD_INITIAL_ADVERTISE_PEER_URLS: http://etcd3:2380
+
 
     haproxy:
         image: patronitraining/patroni
@@ -91,3 +66,23 @@ services:
         environment:
             <<: *patroni_env
             PATRONI_NAME: patroni3
+
+
+
+    pgadmin:
+        image: dpage/pgadmin4
+        #build: .
+        environment:
+        - PGADMIN_DEFAULT_EMAIL=${user}
+        - PGADMIN_DEFAULT_PASSWORD=${password}
+        ports:
+        - '5050:80'
+        restart: always
+        networks: [ demo ]
+        volumes:
+        - /home/yosiyo67/postgres/failover/servers.json:/pgadmin4/servers.json
+        - /home/yosiyo67/postgres/failover/pgpass:/pgadmin4/pgpass 
+        - pgadmin:/root/.pgadmin
+volumes:
+  pgadmin:
+
