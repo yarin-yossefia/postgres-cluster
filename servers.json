@@ -1,7 +1,7 @@
 {
     "Servers": {
         "1": {
-            "Name": "ha_proxy",
+            "Name": "main_instance",
             "Group": "Servers",
             "Host": "haproxy",
             "Port": 5000,
@@ -9,6 +9,16 @@
             "Username": "admin",
 	    "PassFile": "/pgadmin4/pgpass",
 	    "SSLMode": "prefer"
-        }
+        } ,
+	"2": {
+            "Name": "secondary_instance",
+            "Group": "Servers",
+            "Host": "haproxy",
+            "Port": 5001,
+            "MaintenanceDB": "postgres",
+            "Username": "admin",
+            "PassFile": "/pgadmin4/pgpass",
+            "SSLMode": "prefer"	    	
+	}
     }
 }
